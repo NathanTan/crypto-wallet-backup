@@ -1,0 +1,31 @@
+{
+    "name": "crypto-backup-server",
+    "version": "0.1.0",
+    "description": "A server for backing up your crypto wallet seeds",
+    "main": "index.js",
+    "scripts": {
+        "watch": "tsc -w -p src/client/",
+        "install": "tsc -p src/client/",
+        "start": "nodemon server.ts"
+    },
+    "keywords": [
+        "Crypto Currencies",
+        "Wallet",
+        "Block Chain"
+    ],
+    "author": "Nathan Tan",
+    "license": "MIT",
+    "dependencies": {
+        "@types/body-parser": "1.16.3",
+        "@types/express": "^4.17.13",
+        "@types/node": "^7.10.14",
+        "body-parser": "^1.16.3",
+        "express": "^4.17.1",
+        "express-handlebars": "^3.0.0"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.15",
+        "ts-node": "^10.4.0",
+        "typescript": "^4.5.3"
+    }
+}
