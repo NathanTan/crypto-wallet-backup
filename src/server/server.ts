@@ -1,15 +1,10 @@
-// Import the express in typescript file
-import { resolveNaptr } from 'dns';
 import express from 'express';
-
-import fs, { stat } from 'fs';
 import path from 'path'
 
 const fileUpload = require('express-fileupload');
 
 // Initialize the express engine
 const app = express();
-
 
 // Take a port 3000 for running server.
 const port: number = 3000;
