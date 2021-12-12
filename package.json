@@ -4,9 +4,9 @@
   "description": "A server for backing up your crypto wallet seeds",
   "main": "index.js",
   "scripts": {
-    "watch": "tsc -w -p src/client/",
-    "install": "tsc -p src/client/",
-    "start": "nodemon"
+    "dev": "nodemon",
+    "start": "ts-node ./src/server/server.ts",
+    "docker-build": "docker build . -t crypto-backup-server:0.0.1"
   },
   "keywords": [
     "Crypto Currencies",
