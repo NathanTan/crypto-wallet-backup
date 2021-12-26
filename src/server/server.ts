@@ -17,13 +17,13 @@ let status = {
 
 app.use(
     rateLimit({
-      windowMs: 12 * 60 * 60 * 1000, // 12 hour duration in milliseconds
-      max: 5,
-      message: "You exceeded 5 requests in 12 hour limit!",
-      headers: true,
+        windowMs: 12 * 60 * 60 * 1000, // 12 hour duration in milliseconds
+        max: 5,
+        message: "You exceeded 5 requests in 12 hour limit!",
+        headers: true,
     })
-  );
-  
+);
+
 
 app.use(fileUpload());
 app.set('view engine', 'ejs');
