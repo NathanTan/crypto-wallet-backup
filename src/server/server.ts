@@ -1,4 +1,5 @@
 import express from 'express';
+import rateLimit from 'express-rate-limit';
 import path from 'path'
 
 const fileUpload = require('express-fileupload');
@@ -13,6 +14,16 @@ let status = {
     "error": false,
     "message": ""
 }
+
+app.use(
+    rateLimit({
+      windowMs: 12 * 60 * 60 * 1000, // 12 hour duration in milliseconds
+      max: 5,
+      message: "You exceeded 5 requests in 12 hour limit!",
+      headers: true,
+    })
+  );
+  
 
 app.use(fileUpload());
 app.set('view engine', 'ejs');
