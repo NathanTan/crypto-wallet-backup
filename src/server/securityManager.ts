@@ -1,20 +1,35 @@
 class SecurityManager {
 
     // Members
-    private pass: String
+    private user: String
     private key: String
     errorKey = "ERROR"
 
     constructor() {
-        this.pass = process.env.USERNAME ?? this.errorKey
+        console.log("username ~~~~~~~")
+        console.log(process.env.SERVER_NAME)
+        this.user = process.env.SERVER_NAME ?? this.errorKey
         this.key = process.env.PASSWORD ?? this.errorKey
     }
 
     validateRequest(request: Request): Boolean {
-        if (!request.headers) return false
-        if (this.pass === this.errorKey || this.pass === this.errorKey) return false
-        return (request.headers.get("pass") === this.pass &&
-            request.headers.get("key") === this.key)
+        console.log("Validating request")
+        console.log(request.body)
+        // if (this.pass === this.errorKey || this.pass === this.errorKey) return false
+    
+        const body = request.body
+
+        //@ts-ignore
+        console.log("Trying to validate")
+        //@ts-ignore
+        console.log(body["pass"])
+        console.log(this.key)
+        //@ts-ignore
+        console.log((body.key === this.pass))
+        //@ts-ignore
+        return (body.key === this.pass)
+        // &&
+          ///  request.header.get("key") === this.key)
     }
 }
 

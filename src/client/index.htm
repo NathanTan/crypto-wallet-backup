@@ -1,18 +1,50 @@
 <html>
-   <head>
-      <title>File Uploading Form</title>
-   </head>
 
-   <body>
-      <h3>File Upload:</h3>
-      Select a file to upload: <br />
-      
-      <form action = "http://localhost:3000/file_upload" method = "POST" 
-         enctype = "multipart/form-data">
-         <input type="file" name="file" size="50" />
-         <br />
-         <input type = "submit" value = "Upload File" />
-      </form>
-      
-   </body>
+<head>
+   <title>File Uploading Form</title>
+</head>
+
+<body>
+   <h3>File Upload:</h3>
+   Select a file to upload: <br />
+
+   <form action="http://localhost:3000/file_upload" method="POST" enctype="multipart/form-data">
+      <label for="header">User Name:</label>
+      <input type="text" id="" name="user"><br><br>
+      <label for="header">Pass:</label>
+      <input type="text" id="" name="pass"><br><br>
+
+      <input type="file" name="file" size="50" />
+      <br />
+      <input type="submit" value="Upload File" onclick="uploadFile"/>
+   </form>
+
+</body>
+<script>
+   const uploadFile = () => {
+
+   const formData = new FormData();
+   const fileField = document.querySelector('input[name="file"]');
+   const headerFieldUser = document.querySelector('input[name="user"]');
+   const headerFieldKey = document.querySelector('input[name="key"]');
+
+   formData.append('file', fileField.files[0]);
+
+   console.log(headerFieldKey + headerFieldUser)
+
+   fetch('http://localhost:3000/file_upload', {
+      method: 'POST',
+      body: formData
+   })
+      .then(response => response.json())
+      .then(result => {
+         console.log('Success:', result);
+      })
+      .catch(error => {
+         console.error('Error:', error);
+      });
+   }
+
+</script>
+
 </html>

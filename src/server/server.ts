@@ -2,6 +2,7 @@ import express from 'express';
 import rateLimit from 'express-rate-limit';
 import path from 'path'
 import SecurityManager from './securityManager'
+import 'dotenv/config'
 
 const fileUpload = require('express-fileupload');
 
@@ -11,7 +12,6 @@ const bodyParser = require("body-parser")
 const app = express();
 
 const securityManager = new SecurityManager()
-
 
 
 // Take a port 3000 for running server.
@@ -35,9 +35,6 @@ app.use(bodyParser.json());
 //configures body parser to parse JSON
 app.use(bodyParser.urlencoded({ extended: false }));
 //configures body parser to parse url encoded data
-
-// app.use("/login", require("./routes/login"))
-
 
 
 app.use(fileUpload());
