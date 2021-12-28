@@ -13,6 +13,8 @@ const app = express();
 
 const securityManager = new SecurityManager()
 
+// Allow server to send static js files
+app.use('/', express.static('./public'));
 
 // Take a port 3000 for running server.
 const port: number = 3000;
@@ -25,7 +27,7 @@ let status = {
 app.use(
     rateLimit({
         windowMs: 12 * 60 * 60 * 1000, // 12 hour duration in milliseconds
-        max: 5,
+        max: 5000,
         message: "You exceeded 5 requests in 12 hour limit!",
         headers: true,
     })
@@ -44,7 +46,7 @@ app.get('/', (req, res) => {
 })
 
 app.get('/index.htm', function (req, res) {
-    res.sendFile(__dirname + "/../client/" + "index.htm");
+    res.sendFile(path.resolve("/client/index.htm"));
 })
 
 app.get('/status', (req, res) => {
@@ -59,17 +61,19 @@ app.post('/file_upload', (req: any, res) => {
         res.send({
             ok: false,
             message: "Username or password incorrect"
-           })
+        })
     }
 
     if (req.files) {
         const file = req.files.file
         const fileName = file.name
-        file.mv(`${__dirname}/store/${fileName}`, (err: any) => {
+        const filePath = `${__dirname}/store/${fileName}`
+        console.log(`Saving file to ${filePath}`)
+        file.mv(filePath, (err: any) => {
             if (err) {
                 console.log(err)
                 status.error = true
-                status.message = err + " " + `${__dirname}/store/${fileName}` + " " + getFormattedTime()
+                status.message = err + " " + filePath + " " + getFormattedTime()
                 res.send('There is error')
             } else {
                 res.send(`Successful upload at ${getFormattedTime()}`)
