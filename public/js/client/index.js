@@ -138,6 +138,7 @@ function encryptt() {
             _hexEncryptedData = bytesToHexString(encrypted)
 
             document.getElementById("theData").innerText = bytesToHexString(encrypted)
+            document.getElementById("IV").setAttribute("value", _iv)
 
         })
         .catch(function (err) {

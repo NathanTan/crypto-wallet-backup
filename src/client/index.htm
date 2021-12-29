@@ -8,59 +8,67 @@
 <body>
    <div>
 
-   <p>
-      Generate a Key!
-   </p>
-   <button onclick="genKey()" type="button">Generate Key</button>
-   <button onclick="showKey()" type="button">Show Key</button>
-   <p id="key"></p>
-   <button onclick="encryptt()" type="button">Encrypt Data</button>
-   <p id="theData"></p>
-   <button onclick="decryptt()" type="button">Decrypt Data</button>
-   <p id="theDecryptData"></p>
-</div>
+      <p>
+         Generate a Key!
+      </p>
+      <button onclick="genKey()" type="button">Generate Key</button>
+      <button onclick="showKey()" type="button">Show Key</button>
+      <p id="key"></p>
+      <button onclick="encryptt()" type="button">Encrypt Data</button>
+      <p id="theData"></p>
+      <button onclick="decryptt()" type="button">Decrypt Data</button>
+      <p id="theDecryptData"></p>
+   </div>
 
-   
+
    <h3>File Upload:</h3>
    Select a file to upload: <br />
 
    <form action="http://localhost:3000/file_upload" method="POST" enctype="multipart/form-data">
-      <label for="header">User Name:</label>
-      <input type="text" id="" name="user"><br><br>
-      <label for="header">Pass:</label>
-      <input type="text" id="" name="pass"><br><br>
+      <label for="user">User Name:</label>
+      <input type="text" id="" name="user" /><br><br>
+      <label for="pass">Pass:</label>
+      <input type="password" id="" name="pass" /><br><br>
+
+      <label for="iv">Initalization Vector</label>
+      <input type="text" id="IV" readonly="true" disabled="true" name="iv" placeholder="Encrypt to populate"
+         required="true" />
 
       <input type="file" name="file" size="50" />
       <br />
-      <input type="submit" value="Upload File" onclick="uploadFile"/>
+      <input type="submit" value="Upload File" onclick="uploadFile" />
    </form>
 
-<script src="./js/client/index.js"></script>
+   <script src="./js/client/index.js"></script>
 
 </body>
 <script>
    const uploadFile = () => {
 
-   const formData = new FormData();
-   const fileField = document.querySelector('input[name="file"]');
-   const headerFieldUser = document.querySelector('input[name="user"]');
-   const headerFieldKey = document.querySelector('input[name="key"]');
+      const formData = new FormData();
+      const fileField = document.querySelector('input[name="file"]');
+      const headerFieldUser = document.querySelector('input[name="user"]');
+      const headerFieldKey = document.querySelector('input[name="pass"]');
+      const iv = document.getElementById('IV').getAttribute("value")
 
-   formData.append('file', fileField.files[0]);
+      formData.append('file', fileField.files[0]);
+      formData.append('iv', iv)
+      formData.append('test', "test")
 
-   console.log(headerFieldKey + headerFieldUser)
+      console.log(formData)
 
-   fetch('http://localhost:3000/file_upload', {
-      method: 'POST',
-      body: formData
-   })
-      .then(response => response.json())
-      .then(result => {
-         console.log('Success:', result);
+      fetch('http://localhost:3000/file_upload', {
+         method: 'POST',
+         body: formData,
+         iv: iv
       })
-      .catch(error => {
-         console.error('Error:', error);
-      });
+         .then(response => response.json())
+         .then(result => {
+            console.log('Success:', result);
+         })
+         .catch(error => {
+            console.error('Error:', error);
+         });
    }
 
 </script>

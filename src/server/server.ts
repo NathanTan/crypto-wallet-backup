@@ -64,6 +64,11 @@ app.post('/file_upload', (req: any, res) => {
         })
     }
 
+    console.log("----00---")
+
+    console.log(req.iv)
+    console.log(req.body)
+
     if (req.files) {
         const file = req.files.file
         const fileName = file.name
