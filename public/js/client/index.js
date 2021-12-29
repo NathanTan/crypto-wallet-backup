@@ -1,12 +1,60 @@
 // const { generateKey, encrypt } = require("crypto");
 
+const { collapseTextChangeRangesAcrossMultipleVersions } = require("typescript")
+
 console.log("JS 2 file loaded")
 var _key = "" // TODO: Remove this from the client side
 var _encryptedData = ""
+var _hexEncryptedData = ""
 var _iv = ""
+var _name = "AES-GCM"
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function bytesToASCIIString(bytes) {
+    return String.fromCharCode.apply(null, new Uint8Array(bytes));
+}
+
+function bytesToHexString(bytes) {
+    if (!bytes)
+        return null;
+
+    bytes = new Uint8Array(bytes);
+    var hexBytes = [];
+
+    for (var i = 0; i < bytes.length; ++i) {
+        var byteString = bytes[i].toString(16);
+        if (byteString.length < 2)
+            byteString = "0" + byteString;
+        hexBytes.push(byteString);
+    }
+
+    return hexBytes.join("");
+}
+
+
+function hexStringToUint8Array(hexString) {
+    if (hexString.length % 2 != 0)
+        throw "Invalid hexString";
+    var arrayBuffer = new Uint8Array(hexString.length / 2);
+
+    for (var i = 0; i < hexString.length; i += 2) {
+        var byteValue = parseInt(hexString.substr(i, 2), 16);
+        if (byteValue == NaN)
+            throw "Invalid hexString";
+        arrayBuffer[i / 2] = byteValue;
+    }
+
+    return arrayBuffer;
+}
+
+function asciiToUint8Array(str) {
+    var chars = [];
+    for (var i = 0; i < str.length; ++i)
+        chars.push(str.charCodeAt(i));
+    return new Uint8Array(chars);
 }
 
 function genKey() {
@@ -55,9 +103,10 @@ function encryptt() {
 
     console.log(enc.encode(textData));
     // var data = enc.encode(textData)
-    var data = new Uint8Array(textData)
+    var data = asciiToUint8Array(textData)
 
-    _iv = window.crypto.getRandomValues(new Uint8Array(12))
+    if (_iv === "" || _iv == null)
+        _iv = window.crypto.getRandomValues(new Uint8Array(12))
     console.log(`iv: ${_iv}`)
 
     window.crypto.subtle.encrypt(
@@ -80,12 +129,15 @@ function encryptt() {
     )
         .then(function (encrypted) {
             //returns an ArrayBuffer containing the encrypted data
+            console.log("Enncrypted text")
             console.log(encrypted)
-            console.log(new Uint8Array(encrypted));
+            console.log("toString")
+            console.log( bytesToHexString(encrypted));
 
-            _encryptedData =encrypted
+            _encryptedData = bytesToHexString(encrypted)
+            _hexEncryptedData = bytesToHexString(encrypted)
 
-            document.getElementById("theData").innerText = dec.decode(encrypted)
+            document.getElementById("theData").innerText = bytesToHexString(encrypted)
 
         })
         .catch(function (err) {
@@ -97,6 +149,9 @@ function decryptt() {
     console.log(`iv: ${_iv}`)
     console.log("array buffer")
     console.log(_encryptedData)
+    var payload = hexStringToUint8Array(_hexEncryptedData)
+    
+
     window.crypto.subtle.decrypt(
         {
             name: "AES-GCM",
@@ -105,15 +160,15 @@ function decryptt() {
             tagLength: 128, //The tagLength you used to encrypt (if any)
         },
         _key, //from generateKey or importKey above
-        _encryptedData //ArrayBuffer of the data
+        payload //ArrayBuffer of the data
     )
     //returns an ArrayBuffer containing the decrypted data
     .then(function(decrypted){
         console.log(decrypted)
-        console.log(new Uint8Array(decrypted));
+        console.log(bytesToASCIIString(decrypted));
 
         
-        // document.getElementById("theDecryptData").innerText = dec.decode(encrypted)
+        document.getElementById("theDecryptData").innerText = bytesToASCIIString(decrypted)
         // document.getElementById("theDecryptData").innerText = dec.decode(encrypted)
         
     })
