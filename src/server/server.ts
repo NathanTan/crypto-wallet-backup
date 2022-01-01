@@ -2,7 +2,10 @@ import express from 'express';
 import rateLimit from 'express-rate-limit';
 import path from 'path'
 import SecurityManager from './securityManager'
+import FileManager from './fileManager'
 import 'dotenv/config'
+const fs = require('fs');
+
 
 const fileUpload = require('express-fileupload');
 
@@ -12,6 +15,7 @@ const bodyParser = require("body-parser")
 const app = express();
 
 const securityManager = new SecurityManager()
+const fileManager = new FileManager()
 
 // Allow server to send static js files
 app.use('/', express.static('./public'));
@@ -69,24 +73,7 @@ app.post('/file_upload', (req: any, res) => {
     console.log(req.iv)
     console.log(req.body)
 
-    if (req.files) {
-        const file = req.files.file
-        const fileName = file.name
-        const filePath = `${__dirname}/store/${fileName}`
-        console.log(`Saving file to ${filePath}`)
-        file.mv(filePath, (err: any) => {
-            if (err) {
-                console.log(err)
-                status.error = true
-                status.message = err + " " + filePath + " " + getFormattedTime()
-                res.send('There is error')
-            } else {
-                res.send(`Successful upload at ${getFormattedTime()}`)
-            }
-        })
-    } else {
-        res.send('There are no files')
-    }
+    fileManager.uploadFile(req, res)
 })
 
 const getFormattedTime = () => {
